@@ -1,0 +1,30 @@
+name: task_flow
+description: "Proyecto TaskFlow - Gestión de Tareas del Equipo 2"
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  # Iconos estándar para iOS y Android
+  cupertino_icons: ^1.0.8
+  # Sistema de navegación profesional (Requisito de Echeverria Pacheco)
+  go_router: ^17.1.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  # Reglas de estilo de código para evitar errores
+  flutter_lints: ^5.0.0
+
+flutter:
+  # REQUISITO: Activación de Material 3 para el diseño de Dzul Ortega
+  uses-material-design: true
+
+  # CONFIGURACIÓN DE ASSETS: Registro de recursos visuales
+  # Nota: Es fundamental respetar los 2 espacios de sangría en 'assets:'
+  assets:
+    - assets/images/
