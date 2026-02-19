@@ -27,4 +27,5 @@ Antes de mandar el link, asegúrense de que el repositorio tenga:
 
 README.md: Con los nombres de los 5 integrantes y la explicación del avance.
 
+
 Colaboradores: Todos los integrantes deben estar invitados desde los ajustes del repositorio.

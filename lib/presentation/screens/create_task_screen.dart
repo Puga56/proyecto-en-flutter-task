@@ -1,65 +1,54 @@
 import 'package:flutter/material.dart';
 
-// Pantalla para la creación de nuevas tareas en TaskFlow
-// Responsable: Fregoso Alvarado
 class CreateTaskScreen extends StatelessWidget {
   const CreateTaskScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // AppBar configurada con CamelCase para seguir el estándar de Flutter
-      appBar: AppBar(title: const Text('Nueva Tarea - TaskFlow')),
-
-      body: Padding(
-        // Padding de 20.0 para dar aire y legibilidad a los elementos del formulario
-        padding: const EdgeInsets.all(20.0),
+      appBar: AppBar(title: const Text('Nueva Tarea'), centerTitle: true),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // TextFormField: Widget para la entrada de texto del usuario
-            // Nota: Se eliminó el 'const' porque este widget es dinámico al recibir texto
+            const Text('¿Qué tienes pendiente?',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 30),
             TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Nombre de la tarea',
+              decoration: InputDecoration(
+                labelText: 'Título de la tarea',
+                prefixIcon: const Icon(Icons.edit_note),
+                filled: true,
                 border:
-                    OutlineInputBorder(), // Estilo de borde moderno (Material 3)
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
-            const SizedBox(height: 20), // Espaciador constante entre campos
-            // Segundo campo de entrada para asignar un responsable al proyecto
+            const SizedBox(height: 20),
             TextFormField(
-              decoration: const InputDecoration(
-                labelText: 'Responsable (Integrante)',
-                border: OutlineInputBorder(),
+              maxLines: 3,
+              decoration: InputDecoration(
+                labelText: 'Notas o descripción',
+                alignLabelWithHint: true,
+                filled: true,
+                border:
+                    OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
             const SizedBox(height: 30),
-
-            // Botón de acción para procesar la información ingresada
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(
-                  50,
-                ), // Botón que abarca todo el ancho
+            SizedBox(
+              width: double.infinity,
+              child: FilledButton.icon(
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Tarea guardada - Equipo 2')),
+                  );
+                },
+                icon: const Icon(Icons.check_circle_outline),
+                label: const Text('Guardar Tarea',
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
               ),
-              onPressed: () {
-                // REQUISITO: Uso de showDialog para retroalimentación al usuario
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    title: const Text('Tarea Guardada'),
-                    content: const Text('La tarea se ha creado localmente.'),
-                    actions: [
-                      // Botón para cerrar el diálogo y limpiar el flujo de navegación
-                      TextButton(
-                        onPressed: () => Navigator.pop(context),
-                        child: const Text('Aceptar'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-              child: const Text('Guardar Tarea'),
             ),
           ],
         ),

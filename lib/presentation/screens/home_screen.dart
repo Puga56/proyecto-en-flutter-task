@@ -1,48 +1,68 @@
 import 'package:flutter/material.dart';
-// Importamos la extensión de GoRouter para habilitar el context.push
 import 'package:go_router/go_router.dart';
 
-// Pantalla principal del proyecto TaskFlow
-// Responsable: Dzul Ortega
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
+
+  // 1. PONES LA FUNCIÓN AQUÍ (Antes del build)
+  void _mostrarDialogoEliminar(BuildContext context, String nombreTarea) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('¿Eliminar tarea?'),
+        content: Text(
+            'Estás por borrar "$nombreTarea". Esta acción no se puede deshacer.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancelar'),
+          ),
+          FilledButton(
+            style: FilledButton.styleFrom(backgroundColor: Colors.red.shade800),
+            onPressed: () {
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Tarea eliminada correctamente')),
+              );
+            },
+            child: const Text('Eliminar'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // Barra superior con el nombre de la aplicación
-      appBar: AppBar(title: const Text('TaskFlow - Mis Tareas')),
-
-      // ListView: Widget fundamental para mostrar colecciones de datos (requisito de UI)
-      body: ListView(
-        children: [
-          // ListTile: Componente pre-diseñado ideal para mostrar ítems de una lista
-          ListTile(
-            title: const Text('Completar diseño de UI'),
-            subtitle: const Text(
-              'Fecha: 4 de Marzo',
-            ), // Referencia a la fecha de entrega
-            trailing: const Icon(
-              Icons.arrow_forward_ios,
-            ), // Icono indicador de acción
-            // Uso de GoRouter para navegar a la pantalla de detalles de Dzib Puga
-            onTap: () => context.push('/task-detail'),
-          ),
-
-          ListTile(
-            title: const Text('Configurar GoRouter'),
-            subtitle: const Text('Estado: Terminado'),
-            trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () => context.push('/task-detail'),
-          ),
-        ],
+      appBar:
+          AppBar(title: const Text('TaskFlow - Equipo 2'), centerTitle: true),
+      body: ListView.separated(
+        padding: const EdgeInsets.all(20),
+        itemCount: 4,
+        separatorBuilder: (context, index) => const SizedBox(height: 12),
+        itemBuilder: (context, index) {
+          final nombreTarea = 'Tarea del Proyecto ${index + 1}';
+          return Card(
+            child: ListTile(
+              leading: Icon(Icons.check_circle_outline,
+                  color: Theme.of(context).colorScheme.primary),
+              title: Text(nombreTarea),
+              subtitle: const Text('Revisión: 4 de Marzo'),
+              // 2. LLAMAS A LA FUNCIÓN AQUÍ EN EL BOTÓN DE BASURA
+              trailing: IconButton(
+                icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
+                onPressed: () => _mostrarDialogoEliminar(context, nombreTarea),
+              ),
+              onTap: () => context.push('/details'),
+            ),
+          );
+        },
       ),
-
-      // Botón flotante para la creación de nuevas tareas (Acción Principal)
-      floatingActionButton: FloatingActionButton(
-        // Navegación hacia la pantalla de creación de Fregoso Alvarado
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/create-task'),
-        child: const Icon(Icons.add),
+        label: const Text('Nueva Tarea'),
+        icon: const Icon(Icons.add),
       ),
     );
   }
