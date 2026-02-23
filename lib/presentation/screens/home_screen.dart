@@ -22,7 +22,8 @@ class HomeScreen extends StatelessWidget {
             onPressed: () {
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Tarea eliminada correctamente')),
+                const SnackBar(
+                    content: Text('La tarea se eliminó correctamente')),
               );
             },
             child: const Text('Eliminar'),
