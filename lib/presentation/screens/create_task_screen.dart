@@ -6,48 +6,40 @@ class CreateTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Nueva Tarea'), centerTitle: true),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(24),
+      appBar: AppBar(title: const Text('Crear Tarea')),
+      body: Padding(
+        padding: const EdgeInsets.all(24.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text('¿Qué tienes pendiente?',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 30),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 20),
             TextFormField(
               decoration: InputDecoration(
                 labelText: 'Título de la tarea',
-                prefixIcon: const Icon(Icons.edit_note),
-                filled: true,
+                prefixIcon: const Icon(Icons.title),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
-            const SizedBox(height: 20),
+            const SizedBox(height: 16),
             TextFormField(
               maxLines: 3,
               decoration: InputDecoration(
                 labelText: 'Notas o descripción',
-                alignLabelWithHint: true,
-                filled: true,
+                prefixIcon: const Icon(Icons.description_outlined),
                 border:
                     OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
               ),
             ),
-            const SizedBox(height: 30),
+            const Spacer(),
             SizedBox(
               width: double.infinity,
               child: FilledButton.icon(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Tarea guardada - Equipo 2')),
-                  );
-                },
-                icon: const Icon(Icons.check_circle_outline),
-                label: const Text('Guardar Tarea',
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                onPressed: () => Navigator.pop(context),
+                icon: const Icon(Icons.save_outlined),
+                label: const Text('Guardar Tarea'),
               ),
             ),
           ],

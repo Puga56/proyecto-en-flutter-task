@@ -4,26 +4,21 @@ import 'package:go_router/go_router.dart';
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
 
-  // 1. PONES LA FUNCIÓN AQUÍ (Antes del build)
-  void _mostrarDialogoEliminar(BuildContext context, String nombreTarea) {
+  void _confirmarEliminacion(BuildContext context, String tarea) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('¿Eliminar tarea?'),
-        content: Text(
-            'Estás por borrar "$nombreTarea". Esta acción no se puede deshacer.'),
+        content: Text('Estás por borrar "$tarea". Esta acción es permanente.'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
+              onPressed: () => context.pop(), child: const Text('Cancelar')),
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.red.shade800),
             onPressed: () {
-              Navigator.pop(context);
+              context.pop();
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                    content: Text('La tarea se eliminó correctamente')),
+                const SnackBar(content: Text('Tarea eliminada')),
               );
             },
             child: const Text('Eliminar'),
@@ -36,24 +31,23 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:
-          AppBar(title: const Text('TaskFlow - Equipo 2'), centerTitle: true),
+      appBar: AppBar(title: const Text('TaskFlow'), centerTitle: true),
       body: ListView.separated(
-        padding: const EdgeInsets.all(20),
+        padding: const EdgeInsets.all(16),
         itemCount: 4,
-        separatorBuilder: (context, index) => const SizedBox(height: 12),
+        separatorBuilder: (_, __) => const SizedBox(height: 12),
         itemBuilder: (context, index) {
-          final nombreTarea = 'Tarea del Proyecto ${index + 1}';
+          final tarea = 'Tarea del Proyecto ${index + 1}';
           return Card(
             child: ListTile(
               leading: Icon(Icons.check_circle_outline,
                   color: Theme.of(context).colorScheme.primary),
-              title: Text(nombreTarea),
+              title: Text(tarea,
+                  style: const TextStyle(fontWeight: FontWeight.w600)),
               subtitle: const Text('Revisión: 4 de Marzo'),
-              // 2. LLAMAS A LA FUNCIÓN AQUÍ EN EL BOTÓN DE BASURA
               trailing: IconButton(
                 icon: const Icon(Icons.delete_outline, color: Colors.redAccent),
-                onPressed: () => _mostrarDialogoEliminar(context, nombreTarea),
+                onPressed: () => _confirmarEliminacion(context, tarea),
               ),
               onTap: () => context.push('/details'),
             ),
