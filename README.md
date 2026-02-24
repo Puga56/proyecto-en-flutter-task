@@ -1,31 +1,17 @@
-1. El Equipo y sus "Dominios"
-Para la revisión, cada integrante debe abrir y defender su archivo específico:
+TaskFlow - Gestión de Tareas (Equipo 2) 
 
-Guzman Aldaz (Arquitectura): Configuró main.dart y pubspec.yaml (Material 3 y Assets).
+TaskFlow es una aplicación móvil desarrollada en Flutter que implementa los principios de diseño de Material 3 para ofrecer una experiencia de usuario moderna y eficiente. Este proyecto forma parte de la primera entrega de la materia de Desarrollo de Aplicaciones.
 
-Echeverria Pacheco (Navegación): Gestionó el ruteo centralizado en app_router.dart con GoRouter.
+👥 Equipo y Contribuciones
+Cada módulo del proyecto fue asignado a un integrante para garantizar un desarrollo modular y escalable:
 
-Dzul Ortega (Interfaz): Diseñó la lista de tareas en home_screen.dart con ListView.
+Guzman Aldaz (Arquitectura de Software): Definición de la estructura base del proyecto, configuración de main.dart y gestión de dependencias en pubspec.yaml.
 
-Fregoso Alvarado (Datos): Creó el formulario en create_task_screen.dart con TextFormField.
+Echeverria Pacheco (Sistemas de Navegación): Implementación del ruteo centralizado utilizando GoRouter, asegurando transiciones fluidas entre pantallas.
 
-Dzib Puga (UX): Implementó la lógica de showDialog en task_detail_screen.dart.
+Dzul Ortega (Desarrollo de Interfaz - UI): Diseño y maquetación de la lista de tareas principal (HomeScreen) con componentes de Material 3.
 
-2. Lo que el Profesor evaluará (Checklist)
-Diseño Moderno: Uso de Material 3 y colores coherentes.
+Fregoso Alvarado (Manejo de Formularios y Datos): Desarrollo del módulo de creación de tareas, validaciones de entrada y manejo de TextFormField.
 
-Flujo de Navegación: La app debe moverse sin errores entre las 3 pantallas principales.
+Dzib Puga (Experiencia de Usuario - UX): Implementación de la lógica de interactividad, incluyendo diálogos de confirmación (showDialog) y vistas detalladas.
 
-Interacción Segura: Uso de diálogos de confirmación al guardar o borrar tareas.
-
-Código Organizado: Carpetas divididas en config y presentation.
-
-3. GitHub: Presentación Final
-Antes de mandar el link, asegúrense de que el repositorio tenga:
-
-.gitignore: Para no subir archivos pesados como la carpeta build/.
-
-README.md: Con los nombres de los 5 integrantes y la explicación del avance.
-
-
-Colaboradores: Todos los integrantes deben estar invitados desde los ajustes del repositorio.
