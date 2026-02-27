@@ -14,7 +14,21 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final _titleController = TextEditingController();
   final _dateController = TextEditingController();
   final _descController = TextEditingController();
+  final _responsibleController = TextEditingController();
 
+  String? _selectedImportance;
+
+final List<String> _importanceLevels = ['Baja', 'Media', 'Alta'];
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _dateController.dispose();
+    _descController.dispose();
+    _responsibleController.dispose();
+    super.dispose();
+  }
+  
   Future<void> _selectDate() async {
     DateTime? picked = await showDatePicker(
       context: context,
@@ -46,6 +60,18 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
               ),
               const SizedBox(height: 16),
+              
+              //Input del responsable
+              TextFormField(
+                controller: _responsibleController,
+                decoration: const InputDecoration(
+                    labelText: 'Responsable', 
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person_outline)),
+                validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
+              ),
+              const SizedBox(height: 16),
+              
               TextFormField(
                 controller: _dateController,
                 readOnly: true,
@@ -57,6 +83,7 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                 validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
               ),
               const SizedBox(height: 16),
+
               TextFormField(
                 controller: _descController,
                 maxLines: 3,
@@ -64,7 +91,31 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                     labelText: 'Descripción', border: OutlineInputBorder()),
                 validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
               ),
+              const SizedBox(height: 16),
+
+              //Dropdown de importancia
+              DropdownButtonFormField<String>(
+                value: _selectedImportance,
+                decoration: const InputDecoration(
+                  labelText: 'Grado de Importancia',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.flag_outlined),
+                ),
+                items: _importanceLevels.map((String level){
+                  return DropdownMenuItem<String>(
+                    value: level,
+                    child: Text(level),
+                  );
+                }).toList(),
+                onChanged: (newValue) {
+                  setState((){
+                    _selectedImportance = newValue;
+                  });
+                },
+                validator: (v) => v == null ? 'Campo obligatorio' : null,
+              ),
               const SizedBox(height: 24),
+
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -76,6 +127,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
                         title: _titleController.text,
                         date: _dateController.text,
                         description: _descController.text,
+                        responsible: _responsibleController.text,
+                        importance: _selectedImportance ?? 'Media',
                       );
                       context.pop(newTask); // Regresa la tarea nueva
                     }
