@@ -3,12 +3,16 @@ class Task {
   final String title;
   final String date;
   final String description;
+  final String responsible;
+  final String importance;
 
   Task(
       {required this.id,
       required this.title,
       required this.date,
-      required this.description});
+      required this.description,
+      required this.responsible,
+      required this.importance});
 
   // Convertir a Mapa (Guardar)
   Map<String, dynamic> toMap() => {
@@ -16,6 +20,8 @@ class Task {
         'title': title,
         'date': date,
         'description': description,
+        'responsible': responsible,
+        'importance': importance,
       };
 
   // Crear desde Mapa (Leer)
@@ -24,5 +30,7 @@ class Task {
         title: map['title'],
         date: map['date'],
         description: map['description'],
+        responsible: map['responsible'] ?? '',
+        importance: map['importance'] ?? 'Media',
       );
 }

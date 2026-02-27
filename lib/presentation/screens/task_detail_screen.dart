@@ -77,6 +77,65 @@ class TaskDetailScreen extends StatelessWidget {
                       )
                     ],
                   ),
+                  const SizedBox(height: 20),
+                // Fila para Responsable e Importancia
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Columna del Responsable
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text("Responsable:",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold, fontSize: 16)),
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(Icons.person,
+                                  size: 20, color: Colors.indigo),
+                              const SizedBox(width: 8),
+                              Flexible(
+                                child: Text(
+                                    task.responsible.isEmpty
+                                        ? 'Sin asignar'
+                                        : task.responsible,
+                                    style: const TextStyle(fontSize: 16),
+                                    overflow: TextOverflow.ellipsis),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    // Columna de Importancia con un Chip de color
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        const Text("Importancia:",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16)),
+                        const SizedBox(height: 4),
+                        Chip(
+                          label: Text(task.importance),
+                          backgroundColor: task.importance == 'Alta'
+                              ? Colors.red.shade100
+                              : (task.importance == 'Media'
+                                  ? Colors.orange.shade100
+                                  : Colors.green.shade100),
+                          labelStyle: TextStyle(
+                            color: task.importance == 'Alta'
+                              ? Colors.red.shade900
+                              : (task.importance == 'Media'
+                                  ? Colors.deepOrange
+                                  : Colors.green.shade900),
+                          )
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
                   const Divider(height: 30),
                   const Text("Descripción:",
                       style:

@@ -6,9 +6,9 @@
     "configurations": [
         {
             "name": "proyecto-en-flutter-task-main",
-            "cwd": "proyecto-en-flutter-task-main",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "program": "lib/main.dart"
         },
         {
             "name": "proyecto-en-flutter-task-main (profile mode)",
