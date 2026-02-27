@@ -39,6 +39,48 @@ class _HomeScreenState extends State<HomeScreen> {
         jsonEncode(tasks.map((task) => task.toMap()).toList());
     await prefs.setString('tasks_list', encodedData);
   }
+  // --- REQUISITO: Implementación del diálogo de confirmación ---
+  void _mostrarDialogoBorrado(BuildContext context, int index) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Eliminar Tarea'),
+          content: const Text(
+              '¿Estás seguro de que deseas eliminar esta tarea? Esta acción no se puede deshacer.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop(); // Cierra el diálogo sin hacer nada
+              },
+              child: const Text('Cancelar'),
+            ),
+            FilledButton(
+              style: FilledButton.styleFrom(backgroundColor: Colors.red),
+              onPressed: () {
+                // Borramos la tarea y actualizamos la lista
+                setState(() {
+                  tasks.removeAt(index);
+                });
+                _saveTasks(); // Guardamos los cambios
+
+                Navigator.of(dialogContext).pop(); // Cierra el diálogo
+
+                // Mensaje de confirmación
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Tarea eliminada correctamente'),
+                    backgroundColor: Colors.redAccent,
+                  ),
+                );
+              },
+              child: const Text('Eliminar'),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,8 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     trailing: IconButton(
                       icon: const Icon(Icons.delete_outline, color: Colors.red),
                       onPressed: () {
-                        setState(() => tasks.removeAt(index));
-                        _saveTasks();
+                        // Llamamos al diálogo en lugar de borrar directamente
+                        _mostrarDialogoBorrado(context, index); 
                       },
                     ),
                     onTap: () async {
