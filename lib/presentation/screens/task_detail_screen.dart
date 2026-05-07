@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../models/task_model.dart';
 
 class TaskDetailScreen extends StatelessWidget {
-  final Task task;
+  final TaskModel task;
   const TaskDetailScreen({super.key, required this.task});
 
   // Lógica para los días restantes
@@ -45,64 +45,103 @@ class TaskDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
-      appBar: AppBar(
-          title: const Text('Detalles'),
-          backgroundColor: Colors.indigo,
-          foregroundColor: Colors.white),
+      appBar: AppBar(title: const Text('Detalles')),
       body: Column(
         children: [
           Expanded(
-            child: Padding(
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(task.title,
-                      style: const TextStyle(
-                          fontSize: 28,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: theme.cardColor,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                padding: const EdgeInsets.all(24),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(task.title,
+                        style: theme.textTheme.headlineSmall?.copyWith(
                           fontWeight: FontWeight.bold,
-                          color: Colors.indigo)),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      const Icon(Icons.calendar_month, color: Colors.grey),
-                      const SizedBox(width: 8),
-                      Text(task.date, style: const TextStyle(fontSize: 16)),
-                      const Spacer(),
-                      Chip(
-                        label: Text(_getDaysRemaining(task.date),
-                            style: const TextStyle(color: Colors.white)),
-                        backgroundColor: _getStatusColor(task.date),
-                      )
-                    ],
-                  ),
-                  const Divider(height: 30),
-                  const Text("Descripción:",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  const SizedBox(height: 8),
-                  Text(task.description, style: const TextStyle(fontSize: 16)),
-                ],
+                          color: Colors.white,
+                        )),
+                    const SizedBox(height: 16),
+                    Row(
+                      children: [
+                        Icon(Icons.calendar_month,
+                            color: Colors.white70, size: 20),
+                        const SizedBox(width: 8),
+                        Text(task.date,
+                            style: theme.textTheme.bodyLarge
+                                ?.copyWith(color: Colors.white70)),
+                        const Spacer(),
+                        Chip(
+                          label: Text(_getDaysRemaining(task.date),
+                              style: const TextStyle(color: Colors.white)),
+                          backgroundColor: _getStatusColor(task.date),
+                        )
+                      ],
+                    ),
+                    const Divider(height: 40, color: Colors.white12),
+                    Text("Descripción:",
+                        style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w600, color: Colors.white)),
+                    const SizedBox(height: 12),
+                    Text(task.description,
+                        style: theme.textTheme.bodyLarge
+                            ?.copyWith(color: Colors.white70)),
+                  ],
+                ),
               ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.all(16.0),
-            child: SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    foregroundColor: Colors.white),
-                icon: const Icon(Icons.check),
-                label: const Text("Completar Tarea"),
-                onPressed: () {
-                  // Devuelve TRUE para indicar que se debe borrar
-                  context.pop(true);
-                },
-              ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: task.isCompleted
+                          ? Colors.orange
+                          : theme.colorScheme.primary,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    icon: Icon(task.isCompleted ? Icons.undo : Icons.check),
+                    label: Text(task.isCompleted
+                        ? "Marcar Pendiente"
+                        : "Completar Tarea"),
+                    onPressed: () {
+                      context.pop(true);
+                    },
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.redAccent,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    icon: const Icon(Icons.delete),
+                    label: const Text("Eliminar"),
+                    onPressed: () {
+                      context.pop('delete');
+                    },
+                  ),
+                ),
+              ],
             ),
           )
         ],

@@ -14,12 +14,25 @@ dependencies:
   # Sistema de navegación profesional (Requisito de Echeverria Pacheco)
   go_router: ^17.1.0
   shared_preferences: ^2.5.4
+  flutter_riverpod: ^2.5.1 
+  # Base de datos local
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  # Serialización JSON
+  json_annotation: ^4.9.0
+  # Para la navegación avanzada
+  dio: ^5.4.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   # Reglas de estilo de código para evitar errores
   flutter_lints: ^5.0.0
+  # Herramientas para generar los modelos JSON automáticamente
+  build_runner: ^2.4.8
+  json_serializable: ^6.7.1
+  hive_generator: ^2.0.0
+
 
 flutter:
   # REQUISITO: Activación de Material 3 para el diseño de Dzul Ortega

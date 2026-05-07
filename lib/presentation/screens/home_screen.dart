@@ -1,115 +1,126 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../models/task_model.dart'; // Asegúrate que esta ruta sea correcta
+import '../../models/task_model.dart';
+import './providers/task_provider.dart';
 
-class HomeScreen extends StatefulWidget {
+// En lugar de: class HomeScreen extends StatelessWidget
+class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
+  // Agregamos "WidgetRef ref" aquí
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Escuchamos las tareas del provider
+    final tasks = ref.watch(taskProvider);
 
-class _HomeScreenState extends State<HomeScreen> {
-  List<Task> tasks = [];
+    final theme = Theme.of(context);
 
-  @override
-  void initState() {
-    super.initState();
-    _loadTasks();
-  }
-
-  // Cargar tareas guardadas
-  Future<void> _loadTasks() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String? tasksData = prefs.getString('tasks_list');
-    if (tasksData != null) {
-      final List<dynamic> decodedData = jsonDecode(tasksData);
-      setState(() {
-        tasks = decodedData.map((item) => Task.fromMap(item)).toList();
-      });
+    if (tasks.isEmpty) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Task Flow')),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.task_alt, size: 100, color: theme.colorScheme.primary),
+              const SizedBox(height: 16),
+              Text(
+                'No hay tareas aún.',
+                style: theme.textTheme.titleMedium
+                    ?.copyWith(color: Colors.white70),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Agrega una nueva para comenzar.',
+                style:
+                    theme.textTheme.bodyMedium?.copyWith(color: Colors.white60),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            final result = await context.push('/create-task');
+            if (!context.mounted) return;
+            if (result != null) {
+              ref.read(taskProvider.notifier).addTask(result as TaskModel);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Tarea creada con éxito')),
+              );
+            }
+          },
+          child: const Icon(Icons.add),
+        ),
+      );
     }
-  }
 
-  // Guardar tareas en el celular
-  Future<void> _saveTasks() async {
-    final prefs = await SharedPreferences.getInstance();
-    final String encodedData =
-        jsonEncode(tasks.map((task) => task.toMap()).toList());
-    await prefs.setString('tasks_list', encodedData);
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('TaskFlow',
-            style: TextStyle(fontWeight: FontWeight.bold)),
-        backgroundColor: Colors.indigo,
-        foregroundColor: Colors.white,
-      ),
-      body: tasks.isEmpty
-          ? Center(
-              child: Text('No hay tareas pendientes',
-                  style: TextStyle(fontSize: 18, color: Colors.grey[600])))
-          : ListView.separated(
-              padding: const EdgeInsets.all(16),
-              itemCount: tasks.length,
-              separatorBuilder: (_, __) => const SizedBox(height: 12),
-              itemBuilder: (context, index) {
-                final task = tasks[index];
-                return Card(
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  child: ListTile(
-                    leading: const Icon(Icons.assignment, color: Colors.indigo),
-                    title: Text(task.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('Entrega: ${task.date}'),
-                    trailing: IconButton(
-                      icon: const Icon(Icons.delete_outline, color: Colors.red),
-                      onPressed: () {
-                        setState(() => tasks.removeAt(index));
-                        _saveTasks();
-                      },
-                    ),
-                    onTap: () async {
-                      // AQUÍ ESTÁ LA MAGIA: Esperamos el resultado de "Detalles"
-                      final result =
-                          await context.push('/details', extra: task);
-
-                      // Si result es true, significa "Completar Tarea"
-                      if (result == true) {
-                        setState(() {
-                          tasks.removeAt(index);
-                        });
-                        _saveTasks();
-                        if (mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('¡Tarea completada!'),
-                                  backgroundColor: Colors.green));
-                        }
-                      }
-                    },
-                  ),
-                );
-              },
+      appBar: AppBar(title: const Text('Task Flow')),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: tasks.length,
+        itemBuilder: (context, index) => Card(
+          margin: const EdgeInsets.only(bottom: 12),
+          child: ListTile(
+            tileColor: Theme.of(context).cardColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
             ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Colors.indigo,
-        icon: const Icon(Icons.add, color: Colors.white),
-        label: const Text('Nueva Tarea', style: TextStyle(color: Colors.white)),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            leading: Checkbox(
+              value: tasks[index].isCompleted,
+              onChanged: (value) =>
+                  ref.read(taskProvider.notifier).toggleTask(tasks[index]),
+              activeColor: Theme.of(context).colorScheme.primary,
+            ),
+            title: Text(
+              tasks[index].title,
+              style: theme.textTheme.titleMedium?.copyWith(
+                decoration: tasks[index].isCompleted
+                    ? TextDecoration.lineThrough
+                    : null,
+                color: tasks[index].isCompleted ? Colors.white54 : Colors.white,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            subtitle: Text(
+              tasks[index].date,
+              style: theme.textTheme.bodySmall?.copyWith(color: Colors.white70),
+            ),
+            trailing: const Icon(
+              Icons.arrow_forward_ios,
+              color: Color.fromRGBO(255, 255, 255, 0.7),
+            ),
+            onTap: () async {
+              final result =
+                  await context.push('/details', extra: tasks[index]);
+              if (!context.mounted) return;
+              if (result == 'delete') {
+                ref.read(taskProvider.notifier).deleteTask(tasks[index].id);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Tarea eliminada con éxito')),
+                );
+              } else if (result == true) {
+                ref.read(taskProvider.notifier).toggleTask(tasks[index]);
+              }
+            },
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          // Esperamos a que se cree la tarea
           final result = await context.push('/create-task');
-          if (result != null && result is Task) {
-            setState(() => tasks.add(result));
-            _saveTasks();
+          if (!context.mounted) return;
+          if (result != null) {
+            ref.read(taskProvider.notifier).addTask(result as TaskModel);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Tarea creada con éxito')),
+            );
           }
         },
+        child: const Icon(Icons.add),
       ),
     );
   }

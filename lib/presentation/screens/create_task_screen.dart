@@ -35,56 +35,72 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
       appBar: AppBar(title: const Text('Nueva Tarea')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                    labelText: 'Título', border: OutlineInputBorder()),
-                validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(20),
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(20),
               ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _dateController,
-                readOnly: true,
-                onTap: _selectDate,
-                decoration: const InputDecoration(
-                    labelText: 'Fecha',
-                    border: OutlineInputBorder(),
-                    suffixIcon: Icon(Icons.calendar_today)),
-                validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _descController,
-                maxLines: 3,
-                decoration: const InputDecoration(
-                    labelText: 'Descripción', border: OutlineInputBorder()),
-                validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
-              ),
-              const SizedBox(height: 24),
-              SizedBox(
-                width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final newTask = Task(
-                        id: DateTime.now().toString(),
-                        title: _titleController.text,
-                        date: _dateController.text,
-                        description: _descController.text,
-                      );
-                      context.pop(newTask); // Regresa la tarea nueva
-                    }
-                  },
-                  child: const Text('Guardar'),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: const InputDecoration(
+                          labelText: 'Título', border: OutlineInputBorder()),
+                      validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _dateController,
+                      readOnly: true,
+                      onTap: _selectDate,
+                      decoration: const InputDecoration(
+                          labelText: 'Fecha',
+                          border: OutlineInputBorder(),
+                          suffixIcon: Icon(Icons.calendar_today)),
+                      validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _descController,
+                      maxLines: 3,
+                      decoration: const InputDecoration(
+                          labelText: 'Descripción',
+                          border: OutlineInputBorder()),
+                      validator: (v) => v!.isEmpty ? 'Campo obligatorio' : null,
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                    const SizedBox(height: 24),
+                    SizedBox(
+                      width: double.infinity,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (_formKey.currentState!.validate()) {
+                            final newTask = TaskModel(
+                              id: DateTime.now().toString(),
+                              title: _titleController.text,
+                              date: _dateController.text,
+                              description: _descController.text,
+                            );
+                            context.pop(newTask); // Regresa la tarea nueva
+                          }
+                        },
+                        child: const Text('Guardar'),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            ),
+          ],
         ),
       ),
     );
