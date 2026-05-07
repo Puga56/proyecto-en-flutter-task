@@ -25,24 +25,17 @@ class TaskModel {
     this.isCompleted = false,
   });
 
-  TaskModel copyWith({
-    String? id,
-    String? title,
-    String? description,
-    String? date,
-    bool? isCompleted,
-  }) {
+  TaskModel copyWith({bool? isCompleted}) {
     return TaskModel(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      date: date ?? this.date,
+      id: id,
+      title: title,
+      description: description,
+      date: date,
       isCompleted: isCompleted ?? this.isCompleted,
     );
   }
 
   factory TaskModel.fromJson(Map<String, dynamic> json) =>
       _$TaskModelFromJson(json);
-
   Map<String, dynamic> toJson() => _$TaskModelToJson(this);
 }

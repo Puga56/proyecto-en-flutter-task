@@ -14,6 +14,16 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
   final _titleController = TextEditingController();
   final _dateController = TextEditingController();
   final _descController = TextEditingController();
+  final _responsibleController = TextEditingController();
+
+  @override
+  void dispose() {
+    _titleController.dispose();
+    _dateController.dispose();
+    _descController.dispose();
+    _responsibleController.dispose();
+    super.dispose();
+  }
 
   Future<void> _selectDate() async {
     DateTime? picked = await showDatePicker(
